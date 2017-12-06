@@ -203,6 +203,9 @@ public class Lexer {
                 return new Lexeme(Lexeme.Type.FuncKeyword, "func");
             case "return":
                 return new Lexeme(Lexeme.Type.ReturnKeyword, "return");
+            case "var":
+                String varName = readString();
+                return new Lexeme(Lexeme.Type.VarKeyword, varName);
             default:
                 return new Lexeme(Lexeme.Type.StringType, value);
         }

@@ -46,6 +46,7 @@ public class Lexeme {
         ElseKeyword,
         ForKeyword,
         FuncKeyword,
-        ReturnKeyword
+        ReturnKeyword,
+        VarKeyword
     }
 }
