@@ -1,24 +1,29 @@
 package com.kolaczek.winewednesday.lexer;
 
 public class Lexeme {
+
     public Type type;
     public String value;
 
     public Lexeme(Type type) {
+
         this.type = type;
     }
 
     public Lexeme(Type type, String value) {
+
         this.type = type;
         this.value = value;
     }
 
     @Override
     public String toString() {
+
         return this.type.name() + " " + this.value;
     }
 
     public enum Type {
+
         IntegerType,
         StringType,
         OpenParen,
@@ -44,9 +49,10 @@ public class Lexeme {
         SemiColon,
         IfKeyword,
         ElseKeyword,
-        ForKeyword,
+        WhileKeyword,
         FuncKeyword,
         ReturnKeyword,
-        VarKeyword
+        VarKeyword,
+        Comment
     }
 }

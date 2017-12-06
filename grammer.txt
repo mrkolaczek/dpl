@@ -1,0 +1,73 @@
+statements				: statement statements
+						| *empty*
+
+statement				: expression
+						| variableDef
+						| functionDef
+						| classDef
+						| objectDef
+						| conditional
+						| include
+						| comment
+
+expression				: unary expression
+						| *empty*
+
+variableDef				: keyword:var VARIABLE initializerExpression
+
+functionDef				: keyword:func VARIABLE parameterExpression block
+
+arrayDef				: keyword:array	VARIABLE initializerExpression
+
+objectDef				: keyword:object VARIABLE initializerExpression
+
+conditional				: ifStatement
+						| whileLoop
+
+include					: keyword:include STRING
+
+comment					: BACKSLASH *anything* BACKSLASH
+
+unary					: INTEGER
+						| STRING
+						| anonymousExpression
+						| objectExpression
+						| variableExpression
+
+initializerExpression	: OPEN_PAREN expression CLOSE_PAREN
+
+parameterExpression		: OPEN_PAREN optParameterList CLOSE_PAREN
+
+block					: OPEN_CURLY statements CLOSE_CURLY
+
+ifStatement				: keyword:if OPEN_PAREN expression CLOSE_PAREN block optElse
+
+whileLoop				: keyword:while OPEN_PAREN expression CLOSE_PAREN block
+
+anonymousExpression		: anonymousDefine
+						| anonymousCall
+
+objectExpression		: VARIABLE DOT VARIABLE
+						| VARIABLE DOT VARIABLE objectExpression
+						| VARIABLE DOT VARIABLE objectAssign
+						| VARIABLE DOT VARIABLE initializerExpression
+
+variableExpression		: VARIABLE optionalVariableAssign
+						| VARIABLE initializerExpression
+
+optParameterList		: VARIABLE optParameterList
+						| *empty*
+
+optElse					: keyword:else block
+						: keyword:else ifStatement
+						| *empty*
+
+anonymousDefine			: keyword:anonymous parameterExpression block
+
+anonymousCall			: OPEN_PAREN keyword:anonymous parameterExpression block initializerExpression CLOSE_PAREN
+
+optionalVariableAssign	: ASSIGN UNARY
+						| *empty*
+
+objectAssign			: ASSIGN UNARY
+						| ASSIGN CLASS

@@ -28,7 +28,7 @@ public class Lexer {
         return lexemes;
     }
 
-    public Lexeme lex() {
+    private Lexeme lex() {
 
         while (true) {
 
@@ -49,6 +49,15 @@ public class Lexer {
                     return new Lexeme(Lexeme.Type.Plus, "+");
                 case '-':
                     this.linePos++;
+
+                    // Check if negative number follows
+                    char c = this.text.charAt(linePos);
+
+                    if (c >= '0' && c <= '9') {
+                        String s = "-" + readInteger();
+                        return new Lexeme(Lexeme.Type.IntegerType, s);
+                    }
+
                     return new Lexeme(Lexeme.Type.Minus, "-");
                 case '*':
                     this.linePos++;
@@ -122,6 +131,10 @@ public class Lexer {
                 case '}':
                     this.linePos++;
                     return new Lexeme(Lexeme.Type.CloseCurly, "}");
+                case '\\':
+                    this.linePos++;
+                    String comment = readComment();
+                    return new Lexeme(Lexeme.Type.Comment, comment);
                 case '0':
                 case '1':
                 case '2':
@@ -155,6 +168,12 @@ public class Lexer {
             char c = this.text.charAt(this.linePos);
             this.linePos++;
 
+            // Break out if ;
+            if (c == ';') {
+                this.linePos--;
+                break;
+            }
+
             if (c >= '0' && c <= '9') {
                 i.append(c);
             }
@@ -180,6 +199,12 @@ public class Lexer {
                 this.linePos++;
             }
 
+            // Break out if ;
+            if (c == ';') {
+                this.linePos--;
+                break;
+            }
+
             if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
                 i.append(c);
             }
@@ -191,14 +216,32 @@ public class Lexer {
         return i.toString();
     }
 
+    private String readComment() {
+
+        StringBuilder s = new StringBuilder();
+
+        while (this.linePos < this.end) {
+            char c = this.text.charAt(this.linePos);
+            this.linePos++;
+
+            if (c == '\\') {
+                break;
+            }
+
+            s.append(c);
+        }
+
+        return s.toString();
+    }
+
     private Lexeme createKeywordOrStringLexeme(String value) {
         switch (value) {
             case "if":
                 return new Lexeme(Lexeme.Type.IfKeyword, "if");
             case "else":
                 return new Lexeme(Lexeme.Type.ElseKeyword, "else");
-            case "for":
-                return new Lexeme(Lexeme.Type.ForKeyword, "for");
+            case "while":
+                return new Lexeme(Lexeme.Type.WhileKeyword, "while");
             case "func":
                 return new Lexeme(Lexeme.Type.FuncKeyword, "func");
             case "return":
