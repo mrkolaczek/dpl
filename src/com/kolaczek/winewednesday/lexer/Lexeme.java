@@ -2,8 +2,11 @@ package com.kolaczek.winewednesday.lexer;
 
 public class Lexeme {
 
-    public Type type;
-    public String value;
+    private Type type;
+    private String value;
+    private int linePos;
+    private Lexeme left;
+    private Lexeme right;
 
     public Lexeme(Type type) {
 
@@ -16,10 +19,58 @@ public class Lexeme {
         this.value = value;
     }
 
+    public Lexeme(Type type, String value, int linePos) {
+
+        this.type = type;
+        this.value = value;
+        this.linePos = linePos;
+    }
+
+    public Lexeme(Type type, int linePos) {
+
+        this.type = type;
+        this.linePos = linePos;
+    }
+
+    public Lexeme getLeft() {
+
+        return this.left;
+    }
+
+    public Lexeme getRight() {
+
+        return this.right;
+    }
+
+    public void setLeft(Lexeme value) {
+
+        this.left = value;
+    }
+
+    public void setRight(Lexeme value) {
+
+        this.right = value;
+    }
+
+    public boolean check(Type type) {
+
+        return this.type.equals(type);
+    }
+
     @Override
     public String toString() {
 
         return this.type.name() + " " + this.value;
+    }
+
+    public Type getType() {
+
+        return this.type;
+    }
+
+    public int getLinePos() {
+
+        return this.linePos;
     }
 
     public enum Type {
@@ -52,7 +103,26 @@ public class Lexeme {
         WhileKeyword,
         FuncKeyword,
         ReturnKeyword,
+        ObjectKeyword,
         VarKeyword,
-        Comment
+        AnonymousKeyword,
+        ArrayKeyword,
+        Comment,
+        Glue,
+        EOF,
+        Statement,
+        Expression,
+        Unary,
+        Binary,
+        InitializerExpression,
+        ParameterExpression,
+        AnonymousExpression,
+        ObjectExpression,
+        VariableExpression,
+        AnonymousCall,
+        Block,
+        Parameter,
+        Var,
+        Conditional
     }
 }
