@@ -13,20 +13,20 @@ statement				: expression
 expression				: unary expression
 						| *empty*
 
-variableDef				: keyword:var VARIABLE initializerExpression
+variableDef				: keyword:var VARIABLE  = variableExpression
 
 functionDef				: keyword:func VARIABLE parameterExpression block
 
 arrayDef				: keyword:array	VARIABLE initializerExpression
 
-objectDef				: keyword:object VARIABLE initializerExpression
+objectDef				: keyword:obj VARIABLE initializerExpression
 
 conditional				: ifStatement
-						| whileLoop
+						| while
 
 include					: keyword:include STRING
 
-comment					: BACKSLASH *anything* BACKSLASH
+comment					: POUND *anything* POUND
 
 unary					: INTEGER
 						| STRING
@@ -34,15 +34,28 @@ unary					: INTEGER
 						| objectExpression
 						| variableExpression
 
+binary                  : Plus
+                        | Minus
+                        | Multiply
+                        | Divide
+                        | GreaterThan
+                        | GreaterThanEqual
+                        | LessThan
+                        | LessThanEqual
+                        | EqualEqual
+                        | ExclamationEqual
+
 initializerExpression	: OPEN_PAREN expression CLOSE_PAREN
 
 parameterExpression		: OPEN_PAREN optParameterList CLOSE_PAREN
 
+variableExpression      : unary
+
 block					: OPEN_CURLY statements CLOSE_CURLY
 
-ifStatement				: keyword:if OPEN_PAREN expression CLOSE_PAREN block optElse
-
 whileLoop				: keyword:while OPEN_PAREN expression CLOSE_PAREN block
+
+ifStatement				: keyword:if OPEN_PAREN expression CLOSE_PAREN block optElse
 
 anonymousExpression		: anonymousDefine
 						| anonymousCall
@@ -52,9 +65,6 @@ objectExpression		: VARIABLE DOT VARIABLE
 						| VARIABLE DOT VARIABLE objectAssign
 						| VARIABLE DOT VARIABLE initializerExpression
 
-variableExpression		: VARIABLE optionalVariableAssign
-						| VARIABLE initializerExpression
-
 optParameterList		: VARIABLE optParameterList
 						| *empty*
 
@@ -63,8 +73,6 @@ optElse					: keyword:else block
 						| *empty*
 
 anonymousDefine			: keyword:anonymous parameterExpression block
-
-anonymousCall			: OPEN_PAREN keyword:anonymous parameterExpression block initializerExpression CLOSE_PAREN
 
 optionalVariableAssign	: ASSIGN UNARY
 						| *empty*

@@ -13,6 +13,7 @@ public class Parser {
     public Parser(String source) {
 
         this.lexer = new Lexer(source);
+        lexer.advance();
     }
 
     public Lexeme getStatement(Lexeme tree) {
