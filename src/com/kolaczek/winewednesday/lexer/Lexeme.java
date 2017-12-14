@@ -3,7 +3,7 @@ package com.kolaczek.winewednesday.lexer;
 public class Lexeme {
 
     private Type type;
-    private String value;
+    private Object value;
     private int linePos;
     private Lexeme left;
     private Lexeme right;
@@ -14,6 +14,12 @@ public class Lexeme {
     }
 
     public Lexeme(Type type, String value) {
+
+        this.type = type;
+        this.value = value;
+    }
+
+    public Lexeme(Type type, Object value) {
 
         this.type = type;
         this.value = value;
@@ -73,7 +79,7 @@ public class Lexeme {
         return this.linePos;
     }
 
-    public String getValue() {
+    public Object getValue() {
 
         return this.value;
     }
@@ -123,11 +129,14 @@ public class Lexeme {
         ParameterExpression,
         AnonymousExpression,
         ObjectExpression,
-        VariableExpression,
         AnonymousCall,
         Block,
         Parameter,
         Var,
-        Conditional
+        Conditional,
+        Func,
+        Null,
+        Obj,
+        Array
     }
 }

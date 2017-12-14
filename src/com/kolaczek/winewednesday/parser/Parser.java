@@ -106,6 +106,14 @@ public class Parser {
         return tree.getRight().getLeft().getLeft();
     }
 
+    public Lexeme getInitilizer(Lexeme tree) {
+
+        if(tree.getRight().getLeft() == null)
+            return null;
+        else
+            return tree.getRight().getLeft().getLeft();
+    }
+
     public ArrayList<Lexeme> getArrayInitilizers(Lexeme tree) {
 
         ArrayList<Lexeme> lex = new ArrayList<Lexeme>();
