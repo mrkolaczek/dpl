@@ -228,6 +228,7 @@ public class Parser {
             System.out.println("Error at line position " + linePos);
             System.out.println("Bad match in Parser");
             System.out.println("Expected: " + type + " Given: " + lexer.getCurrentLexeme().getType().name());
+            System.out.println("Value: " + lexer.getCurrentLexeme().getValue());
             System.exit(1);
         }
 
@@ -301,6 +302,10 @@ public class Parser {
             l.setLeft(match(Lexeme.Type.IntegerType));
         else if (check(Lexeme.Type.StringType))
             l.setLeft(match(Lexeme.Type.StringType));
+        else if (lexer.anonymousPending())
+            l.setLeft(anonymousExpression());
+        else
+            l.setLeft(variableExpression());
 
         return l;
     }
@@ -370,7 +375,7 @@ public class Parser {
         match(Lexeme.Type.OpenCurly);
 
         if (lexer.statementPending())
-            l.setLeft(statement());
+            l.setLeft(runner());
 
         match(Lexeme.Type.CloseCurly);
 
@@ -426,11 +431,11 @@ public class Parser {
 
         Lexeme l = null;
 
-        if (check(Lexeme.Type.VarKeyword)) {
+        if (check(Lexeme.Type.Var)) {
             Lexeme currentLexeme = this.lexer.getCurrentLexeme();
             l = new Lexeme(Lexeme.Type.Parameter, currentLexeme.getLinePos());
 
-            l.setLeft(match(Lexeme.Type.VarKeyword));
+            l.setLeft(match(Lexeme.Type.Var));
             l.setRight(optParameterList());
         }
 
@@ -481,9 +486,7 @@ public class Parser {
 
     private Lexeme variableDef() {
 
-        match(Lexeme.Type.VarKeyword);
-
-        Lexeme l = null;
+        Lexeme l = match(Lexeme.Type.VarKeyword);
         l.setLeft(match(Lexeme.Type.Var));
         l.setRight(initializerExpression());
 
@@ -504,7 +507,7 @@ public class Parser {
 
         Lexeme l = match(Lexeme.Type.ObjectKeyword);
         l.setLeft(match(Lexeme.Type.Var));
-        l.setLeft(initializerExpression());
+        l.setRight(initializerExpression());
 
         return l;
     }
@@ -542,9 +545,10 @@ public class Parser {
 
         Lexeme currentLexeme = lexer.getCurrentLexeme();
         Lexeme l = new Lexeme(Lexeme.Type.ObjectExpression, currentLexeme.getLinePos());
-        Lexeme t = l.getLeft();
 
         l.setLeft(var);
+
+        Lexeme t = l.getLeft();
 
         while (check(Lexeme.Type.Dot)) {
             match(Lexeme.Type.Dot);
@@ -553,9 +557,9 @@ public class Parser {
         }
 
         if (check(Lexeme.Type.Equal))
-            t.setRight(objectAssign());
+            l.setRight(objectAssign());
         else if (check(Lexeme.Type.InitializerExpression))
-            t.setRight(initializerExpression());
+            l.setRight(initializerExpression());
 
         return l;
     }

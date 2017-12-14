@@ -73,6 +73,11 @@ public class Lexeme {
         return this.linePos;
     }
 
+    public String getValue() {
+
+        return this.value;
+    }
+
     public enum Type {
 
         IntegerType,

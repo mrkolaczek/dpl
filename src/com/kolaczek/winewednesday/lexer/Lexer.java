@@ -280,8 +280,23 @@ public class Lexer {
 
     public boolean statementPending() {
 
-        return expressionPending() || unaryPending() || commentPending() ||
-                binaryPending() || operatorPending();
+        return expressionPending() || commentPending() || operatorPending() || varDefPending() ||
+                objDefPending() || funcDefPending() || arrayDefPending() || conditionalPending();
+    }
+
+    private boolean objDefPending() {
+
+        return this.currentLexeme.check(Lexeme.Type.ObjectKeyword);
+    }
+
+    private boolean funcDefPending() {
+
+        return this.currentLexeme.check(Lexeme.Type.FuncKeyword);
+    }
+
+    private boolean arrayDefPending() {
+
+        return this.currentLexeme.check(Lexeme.Type.ArrayKeyword);
     }
 
     public boolean operatorPending() {
@@ -294,7 +309,6 @@ public class Lexer {
                 || this.currentLexeme.check(Lexeme.Type.LessThan)
                 || this.currentLexeme.check(Lexeme.Type.GreaterThan)
                 || this.currentLexeme.check(Lexeme.Type.GreaterThanEqual)
-                || this.currentLexeme.check(Lexeme.Type.Equal)
                 || this.currentLexeme.check(Lexeme.Type.EqualEqual)
                 || this.currentLexeme.check(Lexeme.Type.ExclamationEqual);
     }
@@ -308,7 +322,9 @@ public class Lexer {
 
         return this.currentLexeme.check(Lexeme.Type.IntegerType)
                 || this.currentLexeme.check(Lexeme.Type.StringType)
-                || this.currentLexeme.check(Lexeme.Type.Equal);
+                || this.currentLexeme.check(Lexeme.Type.Equal)
+                || varPending()
+                || anonymousPending();
     }
 
     public boolean commentPending() {
@@ -326,6 +342,12 @@ public class Lexer {
         return this.currentLexeme.check(Lexeme.Type.IfKeyword);
     }
 
+    public boolean anonymousPending() {
+
+        return this.currentLexeme.check(Lexeme.Type.AnonymousExpression) ||
+                this.currentLexeme.check(Lexeme.Type.OpenParen);
+    }
+
     public boolean whilePending() {
 
         return this.currentLexeme.check(Lexeme.Type.WhileKeyword);
@@ -339,5 +361,10 @@ public class Lexer {
     public boolean varDefPending() {
 
         return this.currentLexeme.check(Lexeme.Type.VarKeyword);
+    }
+
+    public boolean varPending() {
+
+        return this.currentLexeme.check(Lexeme.Type.Var);
     }
 }
